@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+    <title>Age Calculator App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --purple: #854DFF;
+            --light-red: #FF5757;
+            --white: #FFFFFF;
+            --off-white: #F0F0F0;
+            --light-grey: #DBDBDB;
+            --smokey-grey: #716F6F;
+            --off-black: #141414;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--off-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--white);
+            padding: 50px;
+            border-radius: 24px 24px 200px 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 840px;
+            width: 100%;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            width: 160px;
+        }
+
+        label {
+            font-size: 14px;
+            color: var(--smokey-grey);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        input {
+            font-size: 32px;
+            font-weight: 700;
+            padding: 12px 24px;
+            border: 1px solid var(--light-grey);
+            border-radius: 8px;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--purple);
+        }
+
+        .error-message {
+            color: var(--light-red);
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 8px;
+            height: 20px;
+        }
+
+        .divider {
+            position: relative;
+            height: 1px;
+            background-color: var(--light-grey);
+            margin-bottom: 48px;
+        }
+
+        .calculate-btn {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translate(0, -50%);
+            background-color: var(--purple);
+            border: none;
+            border-radius: 50%;
+            width: 96px;
+            height: 96px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .calculate-btn:hover {
+            background-color: var(--off-black);
+        }
+
+        .calculate-btn img {
+            width: 44px;
+            height: 44px;
+        }
+
+        .result {
+            font-size: 104px;
+            font-weight: 800;
+            font-style: italic;
+            line-height: 1.1;
+        }
+
+        .result span {
+            color: var(--purple);
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 10px;
+            background-color: var(--off-black);
+            color: var(--white);
+            font-size: 14px;
+        }
+
+        footer a {
+            color: var(--purple);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+                border-radius: 24px 24px 100px 24px;
+            }
+
+            .input-group {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .input-field {
+                width: 100%;
+            }
+
+            .calculate-btn {
+                right: 50%;
+                transform: translate(50%, -50%);
+            }
+
+            .result {
+                font-size: 56px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="age-calculator-form">
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="day">Day</label>
+                    <input type="number" id="day" name="day" placeholder="DD" min="1" max="31" required>
+                    <div class="error-message" id="day-error"></div>
+                </div>
+                <div class="input-field">
+                    <label for="month">Month</label>
+                    <input type="number" id="month" name="month" placeholder="MM" min="1" max="12" required>
+                    <div class="error-message" id="month-error"></div>
+                </div>
+                <div class="input-field">
+                    <label for="year">Year</label>
+                    <input type="number" id="year" name="year" placeholder="YYYY" min="1900" max="2023" required>
+                    <div class="error-message" id="year-error"></div>
+                </div>
+            </div>
+            <div class="divider">
+                <button type="submit" class="calculate-btn">
+                    <img src="https://raw.githubusercontent.com/frontendmentorio/age-calculator-app-main/main/assets/images/icon-arrow.svg" alt="Calculate">
+                </button>
+            </div>
+        </form>
+        <div class="result">
+            <div><span id="years">--</span> years</div>
+            <div><span id="months">--</span> months</div>
+            <div><span id="days">--</span> days</div>
+        </div>
+    </div>
+    <footer>
+        Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+        Coded by <a href="https://github.com/Hackerbot24">Hackerbot24</a>.
+    </footer>
+
+    <script>
+        const form = document.getElementById('age-calculator-form');
+        const dayInput = document.getElementById('day');
+        const monthInput = document.getElementById('month');
+        const yearInput = document.getElementById('year');
+        const dayError = document.getElementById('day-error');
+        const monthError = document.getElementById('month-error');
+        const yearError = document.getElementById('year-error');
+        const yearsResult = document.getElementById('years');
+        const monthsResult = document.getElementById('months');
+        const daysResult = document.getElementById('days');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateInputs()) {
+                const birthDate = new Date(yearInput.value, monthInput.value - 1, dayInput.value);
+                const age = calculateAge(birthDate);
+                animateResults(age);
+            }
+        });
+
+        function validateInputs() {
+            let isValid = true;
+            const currentDate = new Date();
+            const inputDate = new Date(yearInput.value, monthInput.value - 1, dayInput.value);
+
+            // Reset error messages
+            dayError.textContent = '';
+            monthError.textContent = '';
+            yearError.textContent = '';
+
+            // Validate day
+            if (dayInput.value === '') {
+                dayError.textContent = 'This field is required';
+                isValid = false;
+            } else if (dayInput.value < 1 || dayInput.value > 31) {
+                dayError.textContent = 'Must be a valid day';
+                isValid = false;
+            }
+
+            // Validate month
+            if (monthInput.value === '') {
+                monthError.textContent = 'This field is required';
+                isValid = false;
+            } else if (monthInput.value < 1 || monthInput.value > 12) {
+                monthError.textContent = 'Must be a valid month';
+                isValid = false;
+            }
+
+            // Validate year
+            if (yearInput.value === '') {
+                yearError.textContent = 'This field is required';
+                isValid = false;
+            } else if (yearInput.value > currentDate.getFullYear()) {
+                yearError.textContent = 'Must be in the past';
+                isValid = false;
+            }
+
+            // Validate date is not in the future
+            if (inputDate > currentDate) {
+                yearError.textContent = 'Must be in the past';
+                isValid = false;
+            }
+
+            // Validate date is valid (e.g., not 31/04/1991)
+            if (!isValidDate(yearInput.value, monthInput.value, dayInput.value)) {
+                dayError.textContent = 'Must be a valid date';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function isValidDate(year, month, day) {
+            const date = new Date(year, month - 1, day);
+            return date.getFullYear() == year && date.getMonth() == month - 1 && date.getDate() == day;
+        }
+
+        function calculateAge(birthDate) {
+            const currentDate = new Date();
+            let years = currentDate.getFullYear() - birthDate.getFullYear();
+            let months = currentDate.getMonth() - birthDate.getMonth();
+            let days = currentDate.getDate() - birthDate.getDate();
+
+            if (months < 0 || (months === 0 && days < 0)) {
+                years--;
+                months += 12;
+            }
+
+            if (days < 0) {
+                const lastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 0);
+                days += lastMonth.getDate();
+                months--;
+            }
+
+            return { years, months, days };
+        }
+
+        function animateResults(age) {
+            animateValue(yearsResult, 0, age.years, 1000);
+            animateValue(monthsResult, 0, age.months, 1000);
+            animateValue(daysResult, 0, age.days, 1000);
+        }
+
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.textContent = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+</html>
